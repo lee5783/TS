@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load url_replace %}
+{% block title %}
+    | {{ startup.name }}
+{% endblock %}
+{% block og_title %}
+    {{ startup.name }}
+{% endblock %}
+{% block og_type %}
+{% endblock %}
+{% block og_image %}
+    {{ hostname }}{% static 'techstorm_website/opengraph.png' %}
+{% endblock og_image %}
+{% block description %}
+    More than TV: We’re the digital media destination for a global generation of tech loving fans & entrepreneurs.
+    Get connected with tech trends. Be inspired.
+{% endblock %}
+{% block og_description %}
+    More than TV: We’re the digital media destination for a global generation of tech loving fans & entrepreneurs.
+    Get connected with tech trends. Be inspired.
+{% endblock %}
+{% block content %}
+    <div class="page-header">
+        <div class="row">
+            <div class="small-12 large-5 large-centered columns">
+                <div class="page-header-content">
+                    <strong>
+                        START-UPS:
+                    </strong>
+                    {{ startup.name }}
+                    <br>
+                    {% if user in startup.users.all %}
+                        <a href="{% url 'techstorm_startup:update' slug=startup.slug pk=startup.pk %}">
+                            <i class="fa fa-gear"></i> UPDATE
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    {% if startup %}
+        <div class="startups-content-container">
+            <div class="row">
+                <div class="startups-item-container">
+                    <div class="small-12" align="center">
+                        <div class="videocontent">
+                            {% if startup.video %}
+                                <video poster="
+                                        {% if startup.video.image %}
+                                            {{ startup.video.image.url }}
+                                        {% else %}
+                                            {% static 'img/video-placeholder.png' %}
+                                        {% endif %}"
+                                       style="width:50%;height:50%;"
+                                       controls="controls"
+                                       width="100%" height="100%"
+                                       preload="auto">
+                                    <!-- Currently supports MP4 only -->
+                                    <source type="video/mp4" src="{{ startup.video.link }}" />
+                                    <!-- Flash fallback for non-HTML5 browsers without JavaScript -->
+                                    <object type="application/x-shockwave-flash" data="{% static 'bower_components/mediaelement/build/flashmediaelement.swf' %}">
+                                        <param name="movie" value="{% static 'bower_components/mediaelement/build/flashmediaelement.swf' %}" />
+                                        <param name="flashvars" value="controls=true&file={% static 'videos/placeholder.mp4' %}" />
+                                        <!-- Image as a last resort -->
+                                        <img src="{% static 'img/video-placeholder.png' %}" title="No video playback capabilities" />
+                                    </object>
+                                </video>
+                            {% elif startup.logo %}
+                                <a href="{% if startup.link %}{{ startup.link }}{% else %}#{% endif %}" {% if startup.link %}target="_blank"{% endif %}>
+                                    <img src="{{ startup.logo.url }}" style="width:35%;height:35%;"/>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="startups-item-header">
+                        <a href="{% url 'techstorm_startup:detail' slug=startup.slug pk=startup.pk %}">
+                            {{ startup.name }}
+                        </a>
+                    </div>
+                    <div class="startups-item-description">
+                        {{ startup.description }}
+                        {% if startup.link %}
+                            <br>
+                            <br>
+                            Click <a href="{{ startup.link }}" target="_blank">here</a> to find out more.
+                        {% endif %}
+                    </div>
+                </div>
+                <hr>
+                <div class="text-center">
+                    <h5>
+                        Total Votes
+                    </h5>
+                    <span id="vote-count">
+                        {{ startup.total_votes }}
+                    </span>
+                    <i class="fa text-primary"></i>
+                    <br>
+                    <br>
+                    {% if user.is_authenticated %}
+                        <div id="vote-button">
+                            <a class="button">
+                                <i class="fa text-black"></i>
+                                VOTE FOR {{ startup.name }}
+                            </a>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'techstorm_user:login' %}">
+                            Login to vote for {{ startup.name }}
+                        </a>
+                        <br>
+                        <br>
+                        <a href="{% url 'techstorm_startup:index' %}">
+                            Back
+                        </a>
+                    {% endif %}
+                </div>
+                <hr>
+            </div>
+        </div>
+    {% else %}
+        <div class="row">
+            <h3 class="text-primary">
+                Start-up not found
+            </h3>
+        </div>
+    {% endif %}
+{% endblock %}
+{% block extra_js %}
+    <script>
+        $.ajax({
+            type: "GET",
+            url: "{% url 'techstorm_startup:detail' slug=startup.slug pk=startup.pk %}",
+            data: { startup: "{{ startup.pk }}" }
+        }).done(function( msg ) {
+            if(msg.response === 'voted'){
+                $('#vote-count').html(msg.votes);
+                $('#vote-button').html('You have already voted!');
+            }
+        });
+
+        $('#vote-button').click(function(){
+            $.ajax({
+                type: "POST",
+                url: "{% url 'techstorm_startup:detail' slug=startup.slug pk=startup.pk %}",
+                data: { startup: "{{ startup.pk }}" }
+            }).done(function( msg ) {
+                if(msg.response === 'voted'){
+                    $('#vote-count').html(msg.votes);
+                    $('#vote-button').fadeOut(500);
+                }
+            });
+        });
+    </script>
+{% endblock %}

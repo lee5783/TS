@@ -1,0 +1,409 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+{% endblock %}
+{% block og_title %}
+{% endblock %}
+{% block og_type %}
+{% endblock %}
+{% block og_image %}
+    {{ hostname }}{% static 'techstorm_website/opengraph.png' %}
+{% endblock og_image %}
+{% block description %}
+    More than TV: We’re the digital media destination for a global generation of tech loving fans & entrepreneurs.
+    Get connected with tech trends. Be inspired.
+{% endblock %}
+{% block og_description %}
+    More than TV: We’re the digital media destination for a global generation of tech loving fans & entrepreneurs.
+    Get connected with tech trends. Be inspired.
+{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" charset="utf-8" href="{% static 'bower_components/slick.js/slick/slick.css' %}">
+{% endblock %}
+{% block content %}
+    <div id="index-slider-container">
+        <div class="row">
+            <div class="small-12">
+                <div id="index-slider">
+                    {% if slider %}
+                        {% for slide in slider %}
+                            <div class="index-slide">
+                                <div class="row">
+                                    <div class="small-12 large-6 columns">
+                                        {% if slide.title %}
+                                            <div class="title">
+                                                {{ slide.title }}
+                                            </div>
+                                        {% endif %}
+                                        {% if slide.subtitle %}
+                                            <div class="subtitle">
+                                                {{ slide.subtitle }}
+                                            </div>
+                                        {% endif %}
+                                        {% if slide.divider %}
+                                            <br>
+                                            <div class="divider-text">
+                                                {{ slide.divider }}
+                                            </div>
+                                        {% endif %}
+                                        {% if slide.readmore %}
+                                            <br>
+                                            <a href="{{ slide.readmore }}" target="_blank">
+                                                Read More
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                    <div class="small-12 large-6 columns">
+                                        {% if slide.link %}
+                                            <a href="{{ slide.link }}" target="_blank">
+                                        {% endif %}
+                                        {% if slide.slide %}
+                                            <img class="lazy" data-src="{{ slide.slide.url }}" src="" />
+                                        {% endif %}
+                                        {% if slide.link %}
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="articles-container">
+        <div class="row">
+            <div class="small-12">
+                <div class="small-12 large-7 columns">
+                    <div class="article">
+                        <h5 class="article-header text-white">
+                            <i class="fa fa-lg text-primary"></i>&nbsp;From the Editor's Desk
+                            <a href="{% url 'techstorm_article:index' %}" class="pull-right">
+                                View All
+                            </a>
+                        </h5>
+                        {% if articles %}
+                            {% for article in articles %}
+                                <a href="{% url 'techstorm_article:detail' pk=article.pk slug=article.slug %}">
+                                    <h3 class="text-primary">
+                                        {{ article.title }}
+                                    </h3>
+                                </a>
+                                <br/>
+                                {% if article.featured_image %}
+                                    <a href="{% url 'techstorm_article:detail' pk=article.pk slug=article.slug %}">
+                                        <img class="lazy" data-src="{{ article.featured_image.url }}" src="" />
+                                    </a>
+                                    <hr/>
+                                {% endif %}
+                                {{ article.content|striptags|truncatewords:20 }}&nbsp;&nbsp;
+                                <strong>
+                                    <a href="{% url 'techstorm_article:detail' pk=article.pk slug=article.slug %}">
+                                        Read More
+                                    </a>
+                                </strong>
+                                <hr/>
+                            {% endfor %}
+                        {% else %}
+                            <h5 class="text-primary">
+                                No Stories Found
+                            </h5>
+                            <hr>
+                        {% endif %}
+                        <a href="{% url 'techstorm_article:index' %}" class="article-view-all">
+                            View All Stories
+                            <i class="fa fa-chevron-down text-primary"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="small-12 large-5 columns">
+                    <div class="rss">
+                        <h5 class="rss-header text-white">
+                            <i class="fa fa-folder-open text-primary"></i>&nbsp;Other Stories
+                            <!-- Removed: link to techstorm_aggregator:index -->
+                        </h5>
+                        <!-- Removed: For loop for techstorm_aggregator items -->
+                        <!-- Removed: link to techstorm_aggregator:index -->
+                        {% if extraarticles %}
+                            {% for article in extraarticles %}
+                                <strong>
+                                    <a href="{{ article.get_absolute_url }}" class="text-primary">
+                                        {{ article.title }}
+                                    </a> |
+                                </strong>
+                                {{ article.created }}
+                                <br>
+                                <strong>
+                                    <a href="{{ article.get_absolute_url }}" class="text-primary">
+                                        Read More
+                                    </a>
+                                </strong>
+                                <hr>
+                            {% endfor %}
+                        {% else %}
+                            <h5 class="text-white">
+                                No more other stories
+                            </h5>
+                        {% endif %}
+                        <a href="{% url 'techstorm_article:index' %}" class="rss-view-all">
+                            View All Stories
+                            <i class="fa fa-chevron-down text-primary"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="startup-container">
+        <div class="row">
+            <div class="small-12">
+                <div class="startup-header row">
+                    <strong class="small-4 columns">
+                        <i class="fa fa-lightbulb-o fa-lg text-primary"></i>&nbsp;
+                        Start Ups
+                    </strong>
+                    <strong class="pull-right startup-view-all">
+                        <a href="{% url 'techstorm_startup:index' %}">
+                            View all <i class="fa fa-chevron-down text-primary"></i>
+                        </a>
+                    </strong>
+                </div>
+            </div>
+        </div>
+        <div class="row" data-equalizer>
+            <ul class="small-block-grid-1 large-block-grid-3">
+                {% for startup in startups %}
+                    <li class="startup-item">
+                        <div class="startup-item-image" data-equalizer-watch>
+                            <span class="helper"></span>
+                            {% if startup.logo %}
+                                <img src="{{ startup.logo.url }}" />
+                            {% else %}
+                                <img src="{% static 'img/logo_square.jpg' %}" />
+                            {% endif %}
+                        </div>
+                        <div class="startup-item-description">
+                            <a href="{% url 'techstorm_startup:detail' pk=startup.pk slug=startup.slug %}" class="text-black">
+                                {{ startup.name }}
+                                <i class="fa fa-chevron-right pull-right text-primary"></i>
+                            </a>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+    <section class="latest-shows-container">
+        <div class="row">
+            <div class="small-12">
+                <div class="latest-shows-header row">
+                    <strong class="small-4 columns">
+                        <i class="fa fa-video-camera fa-lg text-primary"></i>&nbsp;
+                        Latest Shows
+                    </strong>
+                    <strong class="pull-right latest-shows-view-all">
+                        <a href="{% url 'techstorm_video:index' %}">
+                            View all shows <i class="fa fa-chevron-down text-primary"></i>
+                        </a>
+                    </strong>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-12">
+                {% if videos %}
+                    <ul class="small-block-grid-1 large-block-grid-3">
+                        {% for video in videos %}
+                            <li class="latest-shows-item">
+                                {% if video.image %}
+                                <div class="videocontent">
+                                    <a href="{% url 'techstorm_video:detail' pk=video.pk slug=video.slug %}">
+                                        <img class="lazy" data-src="{{ video.image.url }}" src="" />
+                                    </a>
+                                </div>
+                                {% endif %}
+                                <div class="latest-shows-item-description">
+                                    <a class="text-charcoal" href="{% url 'techstorm_video:detail' pk=video.pk slug=video.slug %}">
+                                        {{ video.title }}
+                                        <i class="fa fa-chevron-right pull-right text-primary"></i>
+                                    </a>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+    <!--
+    <section class="row">
+        <div class="small-12 large-12 columns">
+            <div class="fixme">
+                <h5 class="fixme-header">
+                    <i class="fa fa-wrench text-primary"></i>&nbsp;Questions for Entrepreneurs
+                    <a href="{% url 'techstorm_fixme:index' %}" class="pull-right">View All</a>
+                </h5>
+                {% for fixme in fixmes %}
+                    <div class="fixme-item row">
+                        <div class="fixme-item-image small-3 columns">
+                            <img src="{% static 'techstorm_website/question_icon.png' %}">
+                        </div>
+                        <div class="fixme-item-content small-9 columns">
+                            <div class="row collapse">
+                                <div class="small-10 columns fixme-item-header">
+                                    <strong>
+                                        {{ fixme.title }}
+                                    </strong>
+                                    <br>
+                                <span class="fixme-item-detail">
+                                    <span class="text-primary">
+                                    BY
+                                        {% if fixmes.user.first_name %}
+                                            {{ fixme.user.first_name }}
+                                        {% else %}
+                                            TECH STORM USER
+                                        {% endif %}
+                                    </span>
+                                    {{ fixme.created }}
+                                </span>
+                                </div>
+                                <div class="small-2 columns">
+                                    <a href="{% url 'techstorm_fixme:detail' slug=fixme.slug pk=fixme.pk %}" class="button primary">
+                                        <i class="fa fa-chevron-right fa-lg"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row collapse">
+                                <div class="fixme-item-excerpt small-12">
+                                    {{ fixme.description|truncatewords:30 }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                {% empty %}
+                    <h3>
+                        No questions have been submitted, submit your own <a href="{% url 'techstorm_fixme:create' %}">here</a>!
+                    </h3>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    -->
+    <section class="latest-shows-container">
+        <div class="row">
+            <div class="small-12">
+                <div class="latest-shows-header row">
+                    <strong class="small-4 columns">
+                        <i class="fa fa-youtube-play fa-lg text-primary"></i>&nbsp;
+                        Editor's Picks
+                    </strong>
+                    <strong class="pull-right latest-shows-view-all">
+                        <a href="{% url 'techstorm_video:youtube_list' %}">
+                            View all Picks <i class="fa fa-chevron-down text-primary"></i>
+                        </a>
+                    </strong>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-12">
+                {% if youtubes %}
+                    <ul class="small-block-grid-1 large-block-grid-3">
+                        {% for youtube in youtubes %}
+                            <li class="latest-shows-item">
+                                <div class="videowrapper">
+                                    <iframe width="100%" height="100%"
+                                            src="https://www.youtube.com/embed/{{ youtube.youtube_id }}/"
+                                            frameborder="0" allowfullscreen>
+                                    </iframe>
+                                </div>
+                                <div class="latest-shows-item-description">
+                                    <a class="text-charcoal" href="{% url 'techstorm_video:youtube_detail' pk=youtube.pk slug=youtube.slug %}">
+                                        {{ youtube.title }}
+                                        <i class="fa fa-chevron-right pull-right text-primary"></i>
+                                    </a>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+    {% if ugcs %}
+    <section class="latest-shows-container">
+        <div class="row">
+            <div class="small-12">
+                <div class="latest-shows-header row">
+                    <strong class="small-4 columns">
+                        <i class="fa fa-youtube-play fa-lg text-primary"></i>&nbsp;
+                        Community Videos
+                    </strong>
+                    <strong class="pull-right latest-shows-view-all">
+                        <a href="{% url 'techstorm_video:ugc_list' %}">
+                            View all Videos <i class="fa fa-chevron-down text-primary"></i>
+                        </a>
+                    </strong>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-12">
+                {% if ugcs %}
+                    <ul class="small-block-grid-1 large-block-grid-3">
+                        {% for ugc in ugcs %}
+                            <li class="latest-shows-item">
+                                <div class="videowrapper">
+                                    <iframe width="100%" height="100%"
+                                            src="https://www.youtube.com/embed/{{ ugc.youtube_id }}?modestbranding=1&controls=0/"
+                                            frameborder="0" allowfullscreen>
+                                    </iframe>
+                                </div>
+                                <div class="latest-shows-item-description">
+                                    <a class="text-charcoal" href="{% url 'techstorm_video:ugc_detail' pk=ugc.pk slug=ugc.slug %}">
+                                        {{ ugc.title }}
+                                        <i class="fa fa-chevron-right pull-right text-primary"></i>
+                                    </a>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+{% endblock %}
+{% block extra_js %}
+    <script type="text/javascript" src="{% static 'bower_components/slick.js/slick/slick.js' %}"></script>
+    <script>
+        var $slider;
+        var $mediaelement;
+
+        (function(){
+
+            //Slick Slider
+            $slider = $('#index-slider').slick({
+                arrows: false,
+                dots: true,
+                autoplay: true,
+                onBeforeChange: function(){
+
+                }
+            });
+
+        }());
+
+    </script>
+    <script type="text/javascript" src="{% static 'bower_components/jquery-lazy/jquery.lazy.min.js' %}"></script>
+    <script>
+        // javascript code
+        jQuery(document).ready(function() {
+            jQuery("img.lazy").lazy({
+                delay: 3000
+            });
+        });
+    </script>
+{% endblock %}

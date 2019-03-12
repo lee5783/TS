@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load url_replace %}
+{% block title %}
+    | {{ article.title }}
+{% endblock %}
+{% block og_title %}
+    | {{ article.title }}
+{% endblock %}
+{% block og_type %}
+{% endblock %}
+{% block og_image %}
+    {% if article.featured_image %}
+        {{ article.featured_image.url }}
+    {% endif %}
+{% endblock og_image %}
+{% block description %}
+    {{ article.content|striptags|truncatewords_html:55 }}
+{% endblock %}
+{% block og_description %}
+    {{ article.content|striptags|truncatewords_html:55 }}
+{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" charset="utf-8" href="{% static 'bower_components/slick.js/slick/slick.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="page-header">
+        <div class="row">
+            <div class="small-12 large-centered columns">
+                <div class="page-header-content text-primary">
+                    <b>{{ article.title }}</b>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="articles-content-container">
+        <div class="row">
+            <div class="small-12">
+                <div class="small-12 centered columns">
+                    {% if article %}
+                        <div class="articles-item-container">
+                            <div class="inline-block articles-item-content">
+                                <div class="articles-item-header">
+                                    <script type="text/javascript">broadstreet.zone(45922, {responsive: true});</script>
+                                    <br><br>
+                                    <h1>
+                                        {{ article.title }}
+                                        <dl class="sub-nav">
+                                            <dd role="menuitem">
+                                                <a data-flip-widget="flipit" href="https://flipboard.com">Add to Flipboard Magazine.</a>
+                                                <script src="https://cdn.flipboard.com/web/buttons/js/flbuttons.min.js" type="text/javascript"></script>
+                                            </dd>
+                                            <dd role="menuitem">
+                                                <script src="//platform.linkedin.com/in.js" type="text/javascript"> lang: en_US</script>
+                                                <script type="IN/Share" data-counter="right"></script>
+                                            </dd>
+                                        </dl>
+                                    </h1>
+                                </div>
+                                <hr>
+                                <div class="articles-item-description">
+                                    {{ article.content|safe }}
+                                    <br>
+                                    <script type="text/javascript">broadstreet.zone(45923, {responsive: true});</script>
+                                    {% if article.question_set %}
+                                        <br>
+                                        <br>
+                                        <div id="vote-app">
+                                            {% for question in article.question_set.all %}
+                                                <div>
+                                                    <strong>
+                                                        <i>
+                                                            {{ question.question_text }}
+                                                        </i>
+                                                    </strong>
+                                                </div>
+                                                <form name="polls">
+                                                    {% csrf_token %}
+                                                    {% for choice in question.choice_set.all %}
+                                                        <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" {% if forloop.counter0 == 0 %}checked {% endif %} />
+                                                        <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br/>
+                                                    {% endfor %}
+
+                                                    <div id="vote-button">
+                                                        <a class="button">
+                                                            <i class="fa  text-black"></i>
+                                                            VOTE NOW
+                                                        </a>
+                                                    </div>
+
+                                                    <br>
+                                                </form>
+                                            {% endfor %}
+                                        </div>
+                                        <div id="vote-message" class="text-primary"></div>
+                                        <br>
+                                        <div id="vote-result">
+                                            {% for question in article.question_set.all %}
+                                                <div>
+                                                    <strong>
+                                                        <i>
+                                                            Vote Results
+                                                        </i>
+                                                    </strong>
+                                                </div>
+                                                <table class="table table-striped" width="50%">
+                                                    {% for choice in question.choice_set.all %}
+                                                        <tr>
+                                                            <td>{{ choice.choice_text }}</td>
+                                                            <td>{{ choice.votes }}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </table>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="one-time">
+                                {% for slide in article.slide_set.all %}
+                                    <div>
+                                        <img src="{{ slide.slide.url }}" style="display: block; margin: auto;" />
+                                        <p>{{ slide.caption }}</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <hr>
+
+                            <!-- Previous/Next button used to be here -->
+                            {% if related_articles %}
+                                <section class="article-container">
+                                    <!-- Insert codes for display related articles. Refer to partner-container on about.html -->
+                                    <div class="row">
+                                        <div class="small-12">
+                                            <strong class="small-4 columns">
+                                                <i class="fa fa-rss-square fa-lg text-primary"></i>&nbsp;
+                                                Related Stories
+                                            </strong>
+                                            <br><br>
+                                            <ul class="small-block-grid-1 large-block-grid-5">
+                                                {% for article in related_articles %}
+                                                    <li class="article-item">
+                                                        {% if article.thumbnail_image %}
+                                                            <div class="article-item-image">
+                                                                <a href="{% url 'techstorm_article:detail' pk=article.pk slug=article.slug %}" class="th">
+                                                                    <img src="{{ article.thumbnail_image.url }}"/>
+                                                                </a>
+                                                            </div>
+                                                        {% endif %}
+                                                        {% if article.title %}
+                                                            <div class="article-item-name">
+                                                                <a class="text-charcoal" href="{% url 'techstorm_article:detail' pk=article.pk slug=article.slug %}">
+                                                                    {{ article.title|truncatewords:8 }}
+                                                                </a>
+                                                            </div>
+                                                        {% endif %}
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </section>
+                            {% endif %}
+                        </div>
+                        <div class="hidden">
+                            <div id="intro">
+                                <!-- Begin MailChimp Signup Form -->
+                                <link href="//cdn-images.mailchimp.com/embedcode/slim-081711.css" rel="stylesheet" type="text/css">
+                                <style type="text/css">
+                                    #mc_embed_signup{background-image:url("{% static 'techstorm_website/mailchimp/subscribe_mobile.png' %}"); background-position: center; background-repeat: no-repeat; clear:left; font:14px Euphemia,Arial,sans-serif; }
+                                    /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+                                    We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+                                </style>
+                                <div id="mc_embed_signup">
+                                    <form action="//techstorm.us9.list-manage.com/subscribe/post?u=c12cfa2de608051b53dff4423&amp;id=1add7529f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                                        <div id="mc_embed_signup_scroll">
+                                            <br><br><br><br><br>
+                                            <br><br><br><br><br>
+                                            <br><br><br><br><br>
+                                            <br>
+                                            <input style="margin-left: auto; margin-right: auto; text-align: center" type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Enter your email" required>
+                                            <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                                            <div style="position: absolute; left: -5000px;"><input type="text" name="b_c12cfa2de608051b53dff4423_1add7529f0" tabindex="-1" value=""></div>
+                                            <div class="clear"><input style="margin-left: auto; margin-right: auto; background:#333333; color: #ffb400;" type="submit" value="SUBSCRIBE" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!--End mc_embed_signup-->
+                            </div>
+                        </div>
+                    {% else %}
+                        <h3 class="text-primary">
+                            Story not found
+                        </h3>
+                    {% endif %}
+                    <br/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block extra_js %}
+    <!-- Disqus Javascript used to be here -->
+
+    <script type="text/javascript" src="{% static 'bower_components/slick.js/slick/slick.js' %}"></script>
+    <script>
+
+        $(document).ready(function(){
+            $('.one-time').slick({
+                dots: true,
+                infinite: true,
+                speed: 300,
+                slidesToShow: 1,
+                adaptiveHeight: true,
+                autoplay: true,
+                swipe: true
+            });
+
+            if (document.cookie.indexOf('visited=true') === -1) {
+                var expires = new Date();
+                expires.setDate(expires.getDate()+30);
+                document.cookie = "visited=true; path=/articles/; expires="+expires.toUTCString();
+                setTimeout(function () {
+                    $.colorbox({
+                        inline: true,
+                        href: '#intro',
+                        width: '320px',
+                        scrolling: false,
+                        onComplete: function () {
+                            $.colorbox.resize();
+                        }
+                    });
+                }, 15000);
+            }
+        });
+
+        $('#vote-button').click(function(){
+            var choice_value;
+
+            if ($("input[name='choice']:checked").length > 0){
+                choice_value = $('input:radio[name=choice]:checked').val();
+            }
+
+            $.ajax({
+                type: "POST",
+                data: { choice: choice_value }
+            }).done(function(msg){
+                if(msg.message === 'success'){
+                    $('#vote-button').fadeOut(500);
+                    $('#vote-message').text('Thank you, your vote for ' + msg.response2 + ' has been successfully submitted!');
+                    $('#vote-result').load(location.href + ' #vote-result');
+                    $('#vote-app').hide();
+                }
+            });
+        });
+    </script>
+{% endblock %}

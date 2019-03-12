@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    | About
+{% endblock %}
+{% block og_title %}
+    About
+{% endblock %}
+{% block og_type %}
+{% endblock %}
+{% block og_image %}
+    {{ hostname }}{% static 'techstorm_website/opengraph.png' %}
+{% endblock og_image %}
+{% block description %}
+    More than TV: We’re the digital media destination for a global generation of tech loving fans & entrepreneurs.
+    Get connected with tech trends. Be inspired.
+{% endblock %}
+{% block og_description %}
+    More than TV: We’re the digital media destination for a global generation of tech loving fans & entrepreneurs.
+    Get connected with tech trends. Be inspired.
+{% endblock %}
+{% block content %}
+    <div class="page-header">
+        <div class="row">
+            <div class="small-12 large-5 large-centered columns">
+                <div class="page-header-content">
+                    <strong>
+                        <i class="fa fa-lg text-primary"></i>&nbsp;
+                        About Us
+                    </strong>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="small-12">
+            <p align="center">
+                <img src="{% static 'img/logo.png' %}" width="30%" height="auto">
+            </p>
+        </div>
+        <div class="small-12 large-5 columns">
+            <p align="justify">
+                We live in incredible times that demand for the digital convergence of media and technology. Tech Storm
+                is a powerful proposition which hits that sweet spot.
+            </p>
+            <p align="justify">
+                Now, a global community of tech lovers and entrepreneurs can go social. A multi-faceted media destination
+                to excite the next digital generation with ingenious innovations, exhilarating discoveries and technology’s
+                rising stars, Tech Storm gets you to spaces beyond imagination with our intriguing TV programmes, original
+                productions and editorial digest.
+            </p>
+            <p align="justify">
+                At Tech Storm, we want to inspire a world of change for tech loving fans. Be part of this revolution.
+            </p>
+        </div>
+        <div class="small-12 large-7 columns">
+            <video poster="{% static 'img/about-video.jpg' %}" style="width:100%; height:100%" controls="controls"
+                    width="100%" height="100%" preload="auto">
+                <source src="{% static 'videos/techstorm_intro.mp4' %}" type="video/mp4">
+            </video>
+        </div>
+    </div>
+    <br>
+    <div class="page-header">
+        <div class="row">
+            <div class="small-12 large-7 large-centered columns">
+                <div class="page-header-content">
+                    <strong>
+                        <i class="fa fa-flag fa-lg text-primary"></i>&nbsp;
+                        Embrace Our Mission
+                    </strong>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="small-12">
+            <p align="center">
+                <blockquote>
+                    Our mission is to help spawn new tech start-up ideas to life and to enrich your quality of life by connecting you directly to the latest tech and start-up tips and infotainment.
+                We challenge the boundaries between awesome technology infotainment and our fans across the world.
+                <cite>Tech Storm</cite>
+                </blockquote>
+            </p>
+        </div>
+    </div>
+    <br>
+    <div class="page-header">
+        <div class="row">
+            <div class="small-12 large-5 large-centered columns">
+                <div class="page-header-content">
+                    <strong>
+                        <i class="fa fa-child fa-lg text-primary"></i>&nbsp;
+                        Hop on With Us
+                    </strong>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="small-12 large-4 columns">
+            <p align="center">
+                <img src="{% static 'img/more_than_tv.jpg' %}" width="80%" height="auto" />
+            </p>
+            <p align="center">
+                <strong>
+                    More Than TV
+                </strong>
+            </p>
+            <p align="justify">
+                Tech Storm is a brand new destination for you to get plugged in to addictive tech trends,
+                reviews on gadgets, apps, video games and to check out the latest,
+                coolest start-up ideas from entrepreneurs. <a href="{% url 'techstorm_article:index' %}">"Read more here"</a>.
+            </p>
+        </div>
+        <div class="small-12 large-4 columns">
+            <p align="center">
+                <img src="{% static 'img/get_involved.jpg' %}" width="80%" height="auto" />
+            </p>
+            <p align="center">
+                <strong>
+                    Get Off the Side-lines, Get Involved
+                </strong>
+            </p>
+            <p align="justify">
+                If you are a passionate app, gadget, technology user,
+                get off the side-lines and get involved.
+                Talk to the entrepreneurs directly to tell them about your pains,
+                and challenge them to solve these for you via clever innovation ideas.
+                Well we know technology ain’t gonna be the magical panacea but yes it does make life better and it should.
+                Use the <a href="{% url 'techstorm_user:account' %}">"Ask an Entrepreneur"</a>
+            </p>
+        </div>
+        <div class="small-12 large-4 columns">
+            <p align="center">
+                <img src="{% static 'img/more_than_fun.jpg' %}" width="90%" height="auto" />
+            </p>
+            <p align="center">
+                <strong>
+                    More Fun to Share
+                </strong>
+            </p>
+            <p align="justify">
+                If you are an entrepreneur dreaming up the next big idea join the Tech Storm network to post your start-up video and connect with consumers.
+                Get ready to be the next start-up rockstar.
+                <a href="{% url 'techstorm_video:index' %}">"Check out our videos"</a>
+            </p>
+        </div>
+    </div>
+    <br>
+{% endblock %}
